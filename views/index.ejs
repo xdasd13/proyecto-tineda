@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Clasificación</th>
+        <th>Editor</th>
+        <th>Categoría</th>
+        <th>Plataforma</th>
+        <th>Operaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% juegos.forEach(juego => { %>
+      <tr>
+        <td><%= juego.idjuego %></td>
+        <td><%= juego.nomjuego %></td>
+        <td><%= juego.precio %></td>
+        <td><%= juego.clasificacion %></td>
+        <td><%= juego.editor %></td>
+        <td><%= juego.categoria %></td>
+        <td><%= juego.plataforma %></td>
+        <td>
+          <a href="/edit/<%= juego.idjuego %>" class="btn btn-sm btn-info">Editar</a>
+          <a href="/delete/<%= juego.idjuego %>" class="btn btn-sm btn-danger delete">Eliminar</a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const enlacesEliminar = document.querySelectorAll(".delete");
+
+    enlacesEliminar.forEach(enlace => {
+      enlace.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        Swal.fire({
+          title: 'Juegos',
+          text: '¿Está seguro de eliminar este juego?',
+          icon: 'question',
+          footer: 'Tienda de Juegos - Proyecto Node.js',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#2980b9',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          cancelButtonColor: '#c0392b'
+        }).then((result) => {
+          if(result.isConfirmed) {
+            window.location.href = event.target.getAttribute("href");
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

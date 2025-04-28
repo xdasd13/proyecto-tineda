@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise')
 
 //Crear pool de acceso
 const pool = mysql.createPool({
-  host: 'localhot',
+  host: 'localhost',
   user: 'root',
   password: '',
   database: 'tiendaJuegos',

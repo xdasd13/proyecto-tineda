@@ -74,5 +74,15 @@ INSERT INTO juegos (
  'Shooter en primera persona con campaña intensa y multijugador competitivo.', 'Activision',
  '/img/cod_mw3.jpg', 3, 5);
  
+SELECT juegos.idjuego, juegos.nomjuego, juegos.precio, juegos.clasificacion, juegos.editor,
+       categoria.nomcategoria, plataformas.nomplataforma
+FROM juegos
+LEFT JOIN categoria ON juegos.idcategoria = categoria.idcategoria
+LEFT JOIN plataformas ON juegos.idplataforma = plataformas.idplataforma;
+
+
  SELECT * FROM juegos;
+ SELECT * FROM categoria;
+SELECT * FROM plataformas;
+
 

@@ -1,0 +1,124 @@
+<%- include('partials/header') %>
+
+<form action="/edit/<%= juego.idjuego %>" id="formulario-registro" autocomplete="off" method="post">
+  <div class="card mt-2">
+    <div class="card-header"><strong>Actualización del Juego</strong></div>
+
+    <div class="card-body">
+      
+      <div class="row g-2">
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input type="text" id="nomjuego" name="nomjuego" value="<%= juego.nomjuego %>" class="form-control" placeholder="Nombre del juego" required>
+            <label for="nomjuego">Nombre del juego</label>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input type="number" step="0.01" id="precio" name="precio" value="<%= juego.precio %>" class="form-control" placeholder="Precio" required>
+            <label for="precio">Precio</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <select name="clasificacion" id="clasificacion" class="form-select" required>
+              <option value="" selected disabled>Seleccione</option>
+              <option value="Todos" <%= juego.clasificacion == 'Todos' ? 'selected' : '' %> >Todos</option>
+              <option value="Todos +10" <%= juego.clasificacion == 'Todos +10' ? 'selected' : '' %> >Todos +10</option>
+              <option value="Adolescentes" <%= juego.clasificacion == 'Adolescentes' ? 'selected' : '' %> >Adolescentes</option>
+              <option value="Maduro +17" <%= juego.clasificacion == 'Maduro +17' ? 'selected' : '' %> >Maduro +17</option>
+              <option value="Adulto" <%= juego.clasificacion == 'Adulto' ? 'selected' : '' %> >Adulto</option>
+            </select>
+            <label for="clasificacion">Clasificación</label>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input type="text" id="editor" name="editor" value="<%= juego.editor %>" class="form-control" placeholder="Editor del juego" required>
+            <label for="editor">Editor</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <select name="idcategoria" id="idcategoria" class="form-select" required>
+              <option value="" selected disabled>Seleccione</option>
+              <% categorias.forEach(cat => { %>
+                <option value="<%= cat.idcategoria %>" <%= cat.idcategoria == juego.idcategoria ? 'selected' : '' %>><%= cat.nomcategoria %></option>
+              <% }) %>
+            </select>
+            <label for="idcategoria">Categoría</label>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <select name="idplataforma" id="idplataforma" class="form-select" required>
+              <option value="" selected disabled>Seleccione</option>
+              <% plataformas.forEach(plat => { %>
+                <option value="<%= plat.idplataforma %>" <%= plat.idplataforma == juego.idplataforma ? 'selected' : '' %>><%= plat.nomplataforma %></option>
+              <% }) %>
+            </select>
+            <label for="idplataforma">Plataforma</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <div class="form-floating">
+          <textarea name="descripcion" id="descripcion" class="form-control" placeholder="Descripción del juego" style="height: 100px;" required><%= juego.descripcion %></textarea>
+          <label for="descripcion">Descripción</label>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <div class="form-floating">
+          <input type="text" id="referenciaimg" name="referenciaimg" value="<%= juego.referenciaimg %>" class="form-control" placeholder="URL de la imagen (opcional)">
+          <label for="referenciaimg">URL de la imagen (opcional)</label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-footer">
+      <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+      <a href="/" class="btn btn-sm btn-secondary">Cancelar</a>
+    </div>
+  </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const formulario = document.querySelector("#formulario-registro")
+
+    formulario.addEventListener("submit", (event) => {
+      event.preventDefault()
+
+      Swal.fire({
+        title: 'Juegos',
+        text: '¿Está seguro de actualizar este juego?',
+        icon: 'question',
+        footer: 'Tienda de Juegos - Proyecto Node.js',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#2980b9',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#c0392b'
+      }).then((result) => {
+        if (result.isConfirmed){
+          formulario.submit()
+        }
+      })
+    })
+  })
+</script>
+
+<%- include('partials/footer') %>
