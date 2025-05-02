@@ -1,0 +1,332 @@
+<%- include('partials/header') %>
+
+<style>
+    /* Estilos generales */
+    body {
+    background-color: #f8f9fa;
+    color: #343a40;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* Titulos */
+  h1 {
+    font-weight: 300;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Panel de filtros */
+  .card-header {
+    background-color: #3a4750 !important; /* Un color más sobrio */
+    border-bottom: none;
+    font-weight: 500;
+  }
+
+  .card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Contenedor de imagen */
+  .card-img-top-container {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0.5rem;
+  }
+
+  /* Badges más elegantes */
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    margin-right: 0.5rem;
+    border-radius: 4px;
+  }
+
+  .badge.bg-primary {
+    background-color: #3a4750 !important;
+  }
+
+  .badge.bg-secondary {
+    background-color: #6c757d !important;
+  }
+
+  /* Título del juego */
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    color: #2c3e50;
+    line-height: 1.3;
+  }
+
+  /* Precio */
+  .text-primary.fw-bold {
+    color: #3a4750 !important; /* Color más sobrio */
+    font-size: 1.1rem;
+  }
+</style>
+<div class="container">
+  <h1 class="my-4">Catálogo de Juegos</h1>
+  
+  <!-- Filtros y buscador -->
+  <div class="card mb-4">
+    <div class="card-header text-white">
+      <i class="fas fa-filter me-2"></i> Filtros
+    </div>
+    <div class="card-body">
+      <form action="/catalogo" method="get" id="filtrosForm">
+        <div class="row g-3">
+          <!-- Buscador -->
+          <div class="col-md-5">
+            <div class="input-group">
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Buscar por nombre, editor, descripción..." 
+                name="busqueda" 
+                value="<%= filtros.busqueda %>"
+              >
+              <button class="btn btn-outline-primary" type="submit">
+                <i class="fas fa-search"></i> Buscar
+              </button>
+            </div>
+          </div>
+          
+          <!-- Filtro de categoría -->
+          <div class="col-md-3">
+            <select class="form-select" name="categoria" onchange="this.form.submit()">
+              <option value="todas" <%= filtros.categoria === 'todas' ? 'selected' : '' %>>Todas las categorías</option>
+              <% categorias.forEach(cat => { %>
+                <option value="<%= cat.idcategoria %>" <%= filtros.categoria == cat.idcategoria ? 'selected' : '' %>>
+                  <%= cat.nomcategoria %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+          
+          <!-- Ordenamiento -->
+          <div class="col-md-3">
+            <select class="form-select" name="orden" onchange="this.form.submit()">
+              <option value="recientes" <%= filtros.orden === 'recientes' ? 'selected' : '' %>>Más recientes</option>
+              <option value="precio_desc" <%= filtros.orden === 'precio_desc' ? 'selected' : '' %>>Precio: Mayor a menor</option>
+              <option value="precio_asc" <%= filtros.orden === 'precio_asc' ? 'selected' : '' %>>Precio: Menor a mayor</option>
+              <option value="nombre_asc" <%= filtros.orden === 'nombre_asc' ? 'selected' : '' %>>Nombre: A-Z</option>
+              <option value="nombre_desc" <%= filtros.orden === 'nombre_desc' ? 'selected' : '' %>>Nombre: Z-A</option>
+            </select>
+          </div>
+          
+          <!-- Botón limpiar filtros -->
+          <div class="col-md-1">
+            <a href="/catalogo" class="btn btn-outline-secondary w-100" title="Limpiar filtros">
+              <i class="fas fa-sync-alt"></i>
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Resultados -->
+  <div class="row">
+    <% if (juegos.length === 0) { %>
+      <div class="col-12 text-center py-5">
+        <div class="alert alert-info">
+          <h4>No se encontraron juegos</h4>
+          <p>Intenta con diferentes criterios de búsqueda o <a href="/catalogo">ver todos los juegos</a>.</p>
+        </div>
+      </div>
+    <% } else { %>
+      <!-- Contador de resultados -->
+      <div class="col-12 mb-3">
+        <p class="text-muted">Mostrando <%= juegos.length %> resultados</p>
+      </div>
+      
+      <!-- Tarjetas de juegos -->
+      <% juegos.forEach(juego => { %>
+        <div class="col-md-4 col-lg-3 mb-4">
+          <div class="card h-100" data-id="<%= juego.idjuego %>" data-descripcion="<%= juego.descripcion %>">
+            <!-- Imagen del juego -->
+            <div class="card-img-top-container">
+              <% if (juego.referenciaimg) { %>
+                <img src="<%= juego.referenciaimg %>" class="card-img-top" alt="<%= juego.nomjuego %>" style="object-fit: contain; max-height: 100%; max-width: 100%;">
+              <% } else { %>
+                <div class="text-center p-4 text-muted">
+                  <i class="fas fa-gamepad fa-3x"></i>
+                  <p class="mt-2 small">Sin imagen</p>
+                </div>
+              <% } %>
+            </div>
+            
+            <div class="card-body">
+              <!-- Etiqueta de categoría -->
+              <div class="mb-2">
+                <span class="badge bg-primary"><%= juego.categoria %></span>
+                <span class="badge bg-secondary"><%= juego.plataforma %></span>
+              </div>
+              
+              <!-- Título y precio -->
+              <h5 class="card-title"><%= juego.nomjuego %></h5>
+              <h6 class="text-primary fw-bold mb-2">$<%= parseFloat(juego.precio).toFixed(2) %></h6>
+              
+              <!-- Editor y clasificación -->
+              <p class="card-text text-muted small">
+                <span class="d-block">Editor: <%= juego.editor %></span>
+                <span class="d-block">Clasificación: <%= juego.clasificacion %></span>
+              </p>
+              
+              <!-- Descripción corta -->
+              <p class="card-text">
+                <%= juego.descripcion.length > 100 ? juego.descripcion.substring(0, 100) + '...' : juego.descripcion %>
+              </p>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="card-footer bg-white">
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-sm btn-outline-primary view-details" data-id="<%= juego.idjuego %>">
+                  <i class="fas fa-eye me-1"></i> Detalles
+                </button>
+                <div>
+                  <a href="/edit/<%= juego.idjuego %>" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-outline-danger delete-game" data-id="<%= juego.idjuego %>">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+</div>
+
+<!-- Modal de detalles mejorado -->
+<div class="modal fade" id="detallesModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Detalles del juego</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Función para mostrar detalles del juego en modal
+    const viewButtons = document.querySelectorAll('.view-details');
+    const modal = new bootstrap.Modal(document.getElementById('detallesModal'));
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    
+    viewButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const gameId = this.getAttribute('data-id');
+        const card = this.closest('.card');
+        
+        // Obtener datos de la tarjeta
+        const titulo = card.querySelector('.card-title').textContent;
+        const imagen = card.querySelector('.card-img-top')?.src || '';
+        const precio = card.querySelector('.fw-bold').textContent;
+        const editor = card.querySelector('.text-muted').children[0].textContent;
+        const clasificacion = card.querySelector('.text-muted').children[1].textContent;
+        const categoria = card.querySelector('.badge.bg-primary').textContent;
+        const plataforma = card.querySelector('.badge.bg-secondary').textContent;
+        
+        // Obtener descripción del atributo data
+        const descripcion = card.getAttribute('data-descripcion');
+        
+        // Actualizar el modal
+        modalTitle.textContent = titulo;
+        
+        let contenidoModal = `
+          <div class="row">
+            <div class="col-md-5 text-center mb-3">
+              ${imagen ? `<img src="${imagen}" alt="${titulo}" class="img-fluid rounded">` : 
+                '<div class="p-5 bg-light rounded"><i class="fas fa-gamepad fa-4x text-muted"></i><p class="mt-3">Sin imagen</p></div>'}
+            </div>
+            <div class="col-md-7">
+              <h4 class="mb-2">${titulo}</h4>
+              <p class="fs-5 fw-bold" style="color: #3a4750;">${precio}</p>
+              
+              <div class="d-flex flex-wrap mb-3">
+                <span class="badge bg-primary me-2">${categoria}</span>
+                <span class="badge bg-secondary">${plataforma}</span>
+              </div>
+              
+              <dl>
+                <dt>Editor</dt>
+                <dd>${editor.replace('Editor: ', '')}</dd>
+                
+                <dt>Clasificación</dt>
+                <dd>${clasificacion.replace('Clasificación: ', '')}</dd>
+              </dl>
+              
+              <hr>
+              
+              <h5 class="mb-3">Descripción</h5>
+              <p class="text-muted">${descripcion}</p>
+            </div>
+          </div>
+        `;
+        
+        modalBody.innerHTML = contenidoModal;
+        modal.show();
+      });
+    });
+    
+    // Confirmación para eliminar juego
+    const deleteButtons = document.querySelectorAll('.delete-game');
+    
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const gameId = this.getAttribute('data-id');
+        
+        Swal.fire({
+          title: '¿Eliminar juego?',
+          text: '¡Esta acción no se puede deshacer!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3a4750',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = `/delete/${gameId}`;
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

@@ -24,7 +24,7 @@ CREATE TABLE juegos(
     idplataforma		INT,
     FOREIGN KEY (idcategoria) REFERENCES categoria(idcategoria),
     FOREIGN KEY (idplataforma)	REFERENCES plataformas(idplataforma)
-) ENGINE = INNODB;
+) ENGINE = INNOD
 
 INSERT INTO categoria (nomcategoria) VALUES
 ('Sandbox'),

@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 
-<form action="/create" id="formulario-registro" autocomplete="off" method="post">
+<form action="/create" id="formulario-registro" autocomplete="off" method="post" enctype="multipart/form-data">
   <div class="card mt-2">
     <div class="card-header"><strong>Registrar Juego</strong></div>
 
@@ -79,10 +79,9 @@
       </div>
 
       <div class="mb-2">
-        <div class="form-floating">
-          <input type="text" id="referenciaimg" name="referenciaimg" class="form-control" placeholder="URL de la imagen">
-          <label for="referenciaimg">URL de la imagen (opcional)</label>
-        </div>
+        <label for="imagen" class="form-label">Imagen del juego</label>
+        <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*">
+        <div class="form-text">Formatos permitidos: JPG, PNG, GIF (Máximo 5MB)</div>
       </div>
 
     </div>
