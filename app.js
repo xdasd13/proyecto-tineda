@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const multer = require('multer'); // Agregar multer
+const multer = require('multer');
 
 // Acceso a rutas
 const rutaJuego = require('./routes/juegos');

@@ -98,3 +98,7 @@ Esta guía te muestra los pasos básicos para descargar y ejecutar este proyecto
 
 - **Error: Cannot find module:**
   Ejecuta `npm install` para asegurarte de que todas las dependencias estén instaladas
+
+
+## Comentario
+   Usar la extención `vscode-pdf` para visualizar la documentación.
